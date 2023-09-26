@@ -133,12 +133,7 @@ class TrackMetadata:
             self.genre = resp.get("genres_list") or resp.get("genre") or []
             self.date = resp.get("release_date_original") or resp.get("release_date")
             self.copyright = resp.get("copyright")
-
-            if artists := resp.get("artists"):
-                self.albumartist = ", ".join(a["name"] for a in artists)
-            else:
-                self.albumartist = safe_get(resp, "artist", "name")
-
+            self.albumartist = safe_get(resp, "artist", "name")
             self.albumcomposer = safe_get(resp, "composer", "name")
             self.label = resp.get("label")
             self.description = resp.get("description")
