@@ -32,7 +32,7 @@ When you type
 rip
 ```
 
-it should show the main help page. If you have no idea what these mean, or are having other issues installing, check out the [detailed installation instructions](https://github.com/nathom/streamrip/wiki#detailed-installation-instructions).
+it should show the main help page. If you have no idea what these mean, or are having other issues installing, check out the [detailed installation instructions](https://github.com/sureshfizzy/streamrip/wiki#detailed-installation-instructions).
 
 If you would like to use `streamrip`'s conversion capabilities, download TIDAL videos, or download music from SoundCloud, install [ffmpeg](https://ffmpeg.org/download.html). To download music from YouTube, install [youtube-dl](https://github.com/ytdl-org/youtube-dl#installation).
 
@@ -93,7 +93,7 @@ Search for albums matching `lil uzi vert` on SoundCloud
 rip search --source soundcloud 'lil uzi vert'
 ```
 
-![streamrip interactive search](https://github.com/nathom/streamrip/blob/dev/demo/album_search.png?raw=true)
+![streamrip interactive search](https://github.com/sureshfizzy/streamrip/blob/dev/demo/album_search.png?raw=true)
 
 Search for *Rumours* on Tidal, and download it
 
@@ -127,7 +127,7 @@ If you're confused about anything, see the help pages. The main help pages can b
 rip url -h
 ```
 
-![example_help_page.png](https://github.com/nathom/streamrip/blob/dev/demo/example_help_page.png?raw=true)
+![example_help_page.png](https://github.com/sureshfizzy/streamrip/blob/dev/demo/example_help_page.png?raw=true)
 
 ## Other information
 
