@@ -1,7 +1,6 @@
 """The clients that interact with the streaming service APIs."""
 
 import base64
-import binascii
 import concurrent.futures
 import hashlib
 import json
@@ -9,11 +8,10 @@ import logging
 import re
 import time
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Generator, Optional, Sequence, Tuple, Union
+from typing import Generator, Optional, Sequence, Tuple, Union
 
 import deezer
 from click import launch, secho
-from Cryptodome.Cipher import AES
 
 from .constants import (
     AGENT,
@@ -37,10 +35,9 @@ from .exceptions import (
     InvalidAppSecretError,
     InvalidQuality,
     MissingCredentials,
-    NonStreamable,
 )
 from .spoofbuz import Spoofer
-from .utils import gen_threadsafe_session, get_quality, safe_get
+from .utils import gen_threadsafe_session, get_quality
 
 logger = logging.getLogger("streamrip")
 

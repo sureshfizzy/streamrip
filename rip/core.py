@@ -26,7 +26,6 @@ from streamrip.clients import (
 from streamrip.constants import MEDIA_TYPES
 from streamrip.exceptions import (
     AuthenticationError,
-    IneligibleError,
     ItemExists,
     MissingCredentials,
     NonStreamable,
@@ -266,7 +265,7 @@ class RipCore(list):
 
         self.download()
 
-    def download(self):
+    def download(self):  # noqa: C901
         """Download all the items in self."""
         try:
             arguments = self._get_download_args()
@@ -667,7 +666,7 @@ class RipCore(list):
                     if i >= limit - 1:
                         return
         else:
-            results = (
+            items = (
                 results.get("data")
                 or results.get("items")
                 or results.get("collection")
@@ -725,7 +724,7 @@ class RipCore(list):
         ret = fmt.format(**{k: media.get(k, default="Unknown") for k in fields})
         return ret
 
-    def interactive_search(
+    def interactive_search(  # noqa: C901
         self,
         query: str,
         source: str = "tidal",
@@ -750,7 +749,7 @@ class RipCore(list):
             # Remove duplicate censored albums, explicit are preferred
             for key in results:
                 for key2 in results:
-                    if key2['explicit'] == False and key['date'] == key2['date'] and key['title'] == key2['title']:
+                    if key2['explicit'] is False and key['date'] == key2['date'] and key['title'] == key2['title']:
                         results.remove(key2)
 
         def title(res):

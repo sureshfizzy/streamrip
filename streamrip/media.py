@@ -2019,7 +2019,7 @@ class Artist(Tracklist, Media):
                 else:
                     # Remove duplicate censored albums, explicit are preferred
                     for key2 in albums:
-                        if key2['parental_warning'] == False and key['tracks_count'] == key2['tracks_count'] and key['title'] == key2['title']:
+                        if key2['parental_warning'] is False and key['tracks_count'] == key2['tracks_count'] and key['title'] == key2['title']:
                             albums.remove(key2)
 
         elif self.client.source == "tidal":

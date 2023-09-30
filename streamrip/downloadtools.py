@@ -1,6 +1,4 @@
 import asyncio
-import functools
-import hashlib
 import logging
 import os
 import re
@@ -9,7 +7,6 @@ from typing import Callable, Dict, Iterable, List, Optional
 
 import aiofiles
 import aiohttp
-from Cryptodome.Cipher import Blowfish
 
 from .exceptions import NonStreamable
 from .utils import gen_threadsafe_session

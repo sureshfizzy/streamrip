@@ -1,7 +1,6 @@
 """Utility functions for RipCore."""
 
 import re
-from typing import Tuple
 
 from streamrip.constants import AGENT
 from streamrip.utils import gen_threadsafe_session
