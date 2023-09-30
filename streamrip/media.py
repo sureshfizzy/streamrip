@@ -2012,17 +2012,15 @@ class Artist(Tracklist, Media):
             # Sort albums by date released
             albums = sorted(albums, key=lambda d: d['released_at'])
 
-
             for key in albums:
                 # Remove albums with less then 3 songs, usually this means it's a single or remixes
-                if key['tracks_count'] < 3:
+                if int(key['tracks_count']) < 3:
                     albums.remove(key)
-                    return
-
-                # Remove duplicate censored albums, explicit are preferred
-                for key2 in albums:
-                    if key2['parental_warning'] == False and key['tracks_count'] == key2['tracks_count'] and key['title'] == key2['title']:
-                        albums.remove(key2)
+                else:
+                    # Remove duplicate censored albums, explicit are preferred
+                    for key2 in albums:
+                        if key2['parental_warning'] == False and key['tracks_count'] == key2['tracks_count'] and key['title'] == key2['title']:
+                            albums.remove(key2)
 
         elif self.client.source == "tidal":
             self.name = self.meta["name"]
