@@ -673,13 +673,6 @@ class RipCore(list):
                 or results.get("albums", {}).get("data", False)
             )
 
-            # Remove duplicate censored albums, explicit are preferred
-            for key in items:
-                for key2 in items:
-                    if key['releaseDate'] == key2['releaseDate'] and key['title'] == key2['title']:
-                        if key['popularity'] > key2['popularity']:
-                            items.remove(key2)
-
             if not items:
                 raise NoResultsFound(query)
 
