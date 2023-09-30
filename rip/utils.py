@@ -26,23 +26,3 @@ def extract_interpreter_url(url: str) -> str:
         "url that contains an artist id."
     )
 
-
-deezer_id_link_regex = re.compile(
-    r"https://www\.deezer\.com/[a-z]{2}/(album|artist|playlist|track)/(\d+)"
-)
-
-
-def extract_deezer_dynamic_link(url: str) -> Tuple[str, str]:
-    """Extract a deezer url that includes an ID from a deezer.page.link url.
-
-    :param url:
-    :type url: str
-    :rtype: Tuple[str, str]
-    """
-    session = gen_threadsafe_session({"User-Agent": AGENT})
-    r = session.get(url)
-    match = deezer_id_link_regex.search(r.text)
-    if match:
-        return match.group(1), match.group(2)
-
-    raise Exception("Unable to extract Deezer dynamic link.")

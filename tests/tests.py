@@ -7,7 +7,6 @@ from click import echo, secho
 test_urls = {
     "qobuz": "https://www.qobuz.com/us-en/album/blackest-blue-morcheeba/h4nngz0wgqesc",
     "tidal": "https://tidal.com/browse/album/183284294",
-    "deezer": "https://www.deezer.com/us/album/225281222",
     "soundcloud": "https://soundcloud.com/dj-khaled/sets/khaled-khaled",
 }
 

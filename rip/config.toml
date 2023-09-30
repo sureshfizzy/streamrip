@@ -5,8 +5,8 @@ folder = ""
 source_subdirectories = false
 
 [downloads.concurrency]
-# Download (and convert) tracks all at once, instead of sequentially. 
-# If you are converting the tracks, or have fast internet, this will 
+# Download (and convert) tracks all at once, instead of sequentially.
+# If you are converting the tracks, or have fast internet, this will
 # substantially improve processing speed.
 enabled = true
 # The maximum number of tracks to download at once
@@ -47,22 +47,6 @@ refresh_token = ""
 # in again using `rip config --tidal`
 token_expiry = ""
 
-[deezer]
-# 0, 1, or 2
-# This only applies to paid Deezer subscriptions. Those using deezloader
-# are automatically limited to quality = 1
-quality = 2
-# An authentication cookie that allows streamrip to use your Deezer account
-# See https://github.com/nathom/streamrip/wiki/Finding-Your-Deezer-ARL-Cookie
-# for instructions on how to find this
-arl = ""
-# This allows for free 320kbps MP3 downloads from Deezer
-# If an arl is provided, deezloader is never used
-use_deezloader = true
-# This warns you when the paid deezer account is not logged in and rip falls
-# back to deezloader, which is unreliable
-deezloader_warnings = true
-
 [soundcloud]
 # Only 0 is available for now
 quality = 0
@@ -94,7 +78,7 @@ path = ""
 enabled = false
 # FLAC, ALAC, OPUS, MP3, VORBIS, or AAC
 codec = "ALAC"
-# In Hz. Tracks are downsampled if their sampling rate is greater than this. 
+# In Hz. Tracks are downsampled if their sampling rate is greater than this.
 # Value of 48000 is recommended to maximize quality and minimize space
 sampling_rate = 48000
 # Only 16 and 24 are available. It is only applied when the bit depth is higher
@@ -126,7 +110,7 @@ ignore_censored_album_when_explicit_exists = false
 # Write the image to the audio file
 embed = true
 # The size of the artwork to embed. Options: thumbnail, small, large, original.
-# "original" images can be up to 30MB, and may fail embedding. 
+# "original" images can be up to 30MB, and may fail embedding.
 # Using "large" is recommended.
 size = "large"
 # Both of these options limit the size of the embedded artwork. If their values
@@ -138,7 +122,7 @@ max_height = -1
 keep_hires_cover = true
 
 [metadata]
-# Sets the value of the 'ALBUM' field in the metadata to the playlist's name. 
+# Sets the value of the 'ALBUM' field in the metadata to the playlist's name.
 # This is useful if your music library software organizes tracks based on album name.
 set_playlist_to_album = true
 # Replaces the original track's tracknumber with it's position in the playlist
@@ -168,9 +152,9 @@ truncate = true
 [lastfm]
 # The source on which to search for the tracks.
 source = "qobuz"
-# If no results were found with the primary source, the item is searched for 
+# If no results were found with the primary source, the item is searched for
 # on this one.
-fallback_source = "deezer"
+fallback_source = "tidal"
 
 [theme]
 # Options: "dainty" or "plain"

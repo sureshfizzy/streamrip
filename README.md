@@ -3,15 +3,14 @@
 [![Downloads](https://pepy.tech/badge/streamrip)](https://pepy.tech/project/streamrip)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
-A scriptable stream downloader for Qobuz, Tidal, Deezer and SoundCloud.
+A scriptable stream downloader for Qobuz, Tidal, and SoundCloud.
 
 ![Streamrip downloading an album](https://github.com/nathom/streamrip/blob/dev/demo/download_album.png?raw=true)
-
 
 ## Features
 
 - Super fast, as it utilizes concurrent downloads and conversion
-- Downloads tracks, albums, playlists, discographies, and labels from Qobuz, Tidal, Deezer, and SoundCloud
+- Downloads tracks, albums, playlists, discographies, and labels from Qobuz, Tidal, and SoundCloud
 - Supports downloads of Spotify and Apple Music playlists through [last.fm](https://www.last.fm)
 - Automatically converts files to a preferred format
 - Has a database that stores the downloaded tracks' IDs so that repeats are avoided
@@ -61,27 +60,21 @@ Download multiple albums from Qobuz
 rip url https://www.qobuz.com/us-en/album/back-in-black-ac-dc/0886444889841 https://www.qobuz.com/us-en/album/blue-train-john-coltrane/0060253764852
 ```
 
-
-
 Download the album and convert it to `mp3`
 
 ```bash
 rip url --codec mp3 https://open.qobuz.com/album/0060253780968
 ```
 
-
-
 To set the maximum quality, use the `--max-quality` option to `0, 1, 2, 3, 4`:
 
-| Quality ID | Audio Quality         | Available Sources                            |
-| ---------- | --------------------- | -------------------------------------------- |
-| 0          | 128 kbps MP3 or AAC   | Deezer, Tidal, SoundCloud (most of the time) |
-| 1          | 320 kbps MP3 or AAC   | Deezer, Tidal, Qobuz, SoundCloud (rarely)    |
-| 2          | 16 bit, 44.1 kHz (CD) | Deezer, Tidal, Qobuz, SoundCloud (rarely)    |
-| 3          | 24 bit, ≤ 96 kHz      | Tidal (MQA), Qobuz, SoundCloud (rarely)      |
-| 4          | 24 bit, ≤ 192 kHz     | Qobuz                                        |
-
-
+| Quality ID | Audio Quality         | Available Sources                       |
+| ---------- | --------------------- | --------------------------------------- |
+| 0          | 128 kbps MP3 or AAC   | Tidal, SoundCloud (most of the time)    |
+| 1          | 320 kbps MP3 or AAC   | Tidal, Qobuz, SoundCloud (rarely)       |
+| 2          | 16 bit, 44.1 kHz (CD) | Tidal, Qobuz, SoundCloud (rarely)       |
+| 3          | 24 bit, ≤ 96 kHz      | Tidal (MQA), Qobuz, SoundCloud (rarely) |
+| 4          | 24 bit, ≤ 192 kHz     | Qobuz                                   |
 
 ```bash
 rip url --max-quality 3 https://tidal.com/browse/album/147569387
@@ -95,7 +88,7 @@ rip search --source soundcloud 'lil uzi vert'
 
 ![streamrip interactive search](https://github.com/nathom/streamrip/blob/dev/demo/album_search.png?raw=true)
 
-Search for *Rumours* on Tidal, and download it
+Search for _Rumours_ on Tidal, and download it
 
 ```bash
 rip search 'fleetwood mac rumours'
@@ -119,8 +112,6 @@ For extreme customization, see the config file
 rip config --open
 ```
 
-
-
 If you're confused about anything, see the help pages. The main help pages can be accessed by typing `rip` by itself in the command line. The help pages for each command can be accessed with the `-h` flag. For example, to see the help page for the `url` command, type
 
 ```
@@ -132,7 +123,6 @@ rip url -h
 ## Other information
 
 For more in-depth information about `streamrip`, see the help pages and the [wiki](https://github.com/nathom/streamrip/wiki/).
-
 
 ## Contributions
 
@@ -158,7 +148,7 @@ Please document any functions or obscure lines of code.
 
 ### The Wiki
 
-To help out `streamrip` users that may be having trouble, consider contributing some information to the wiki. 
+To help out `streamrip` users that may be having trouble, consider contributing some information to the wiki.
 Nothing is too obvious and everything is appreciated.
 
 ## Acknowledgements
@@ -172,17 +162,13 @@ Thanks to Vitiko98, Sorrow446, and DashLt for their contributions to this projec
 - [Tidal-Media-Downloader](https://github.com/yaronzz/Tidal-Media-Downloader)
 - [scdl](https://github.com/flyingrub/scdl)
 
-
-
 ## Disclaimer
 
-
-I will not be responsible for how you use `streamrip`. By using `streamrip`, you agree to the terms and conditions of the Qobuz, Tidal, and Deezer APIs.
+I will not be responsible for how you use `streamrip`. By using `streamrip`, you agree to the terms and conditions of the Qobuz, and Tidal APIs.
 
 ## Donations/Sponsorship
 
 <a href="https://www.buymeacoffee.com/nathom" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
-
 
 Consider contributing some funds [here](https://www.buymeacoffee.com/nathom), which will go towards holding
 the premium subscriptions that I need to debug and improve streamrip. Thanks for your support!

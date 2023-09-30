@@ -76,7 +76,6 @@ class Config:
             [
                 "qobuz",
                 "tidal",
-                "deezer",
                 "downloads.folder",
                 "filepaths.folder_format",
                 "filepaths.track_format",
@@ -189,8 +188,6 @@ class Config:
             return self.qobuz_creds
         if source == "tidal":
             return self.tidal_creds
-        if source == "deezer":
-            return {"arl": self.file["deezer"]["arl"]}
         if source == "soundcloud":
             soundcloud = self.file["soundcloud"]
             return {

@@ -40,14 +40,10 @@ class DownloadStream:
 
         :param url: The url to download
         :type url: str
-        :param source: Only applicable for Deezer
-        :type source: str
         :param params: Parameters to pass in the request
         :type params: dict
         :param headers: Headers to pass in the request
         :type headers: dict
-        :param item_id: (Only for Deezer) the ID of the track
-        :type item_id: str
         """
         self.source = source
         self.session = gen_threadsafe_session(headers=headers)
@@ -70,7 +66,6 @@ class DownloadStream:
             try:
                 info = self.request.json()
                 try:
-                    # Usually happens with deezloader downloads
                     raise NonStreamable(f"{info['error']} - {info['message']}")
                 except KeyError:
                     raise NonStreamable(info)
@@ -83,20 +78,6 @@ class DownloadStream:
 
         :rtype: Iterable
         """
-        if self.source == "deezer" and self.is_encrypted.search(self.url) is not None:
-            assert isinstance(self.id, str), self.id
-
-            blowfish_key = self._generate_blowfish_key(self.id)
-            # decryptor = self._create_deezer_decryptor(blowfish_key)
-            CHUNK_SIZE = 2048 * 3
-            return (
-                # (decryptor.decrypt(chunk[:2048]) + chunk[2048:])
-                (self._decrypt_chunk(blowfish_key, chunk[:2048]) + chunk[2048:])
-                if len(chunk) >= 2048
-                else chunk
-                for chunk in self.request.iter_content(CHUNK_SIZE)
-            )
-
         return self.request.iter_content(chunk_size=1024)
 
     @property
@@ -110,37 +91,6 @@ class DownloadStream:
         :rtype: int
         """
         return self.file_size
-
-    def _create_deezer_decryptor(self, key) -> Blowfish:
-        return Blowfish.new(key, Blowfish.MODE_CBC, b"\x00\x01\x02\x03\x04\x05\x06\x07")
-
-    @staticmethod
-    def _generate_blowfish_key(track_id: str):
-        """Generate the blowfish key for Deezer downloads.
-
-        :param track_id:
-        :type track_id: str
-        """
-        SECRET = "g4el58wc0zvf9na1"
-        md5_hash = hashlib.md5(track_id.encode()).hexdigest()
-        # good luck :)
-        return "".join(
-            chr(functools.reduce(lambda x, y: x ^ y, map(ord, t)))
-            for t in zip(md5_hash[:16], md5_hash[16:], SECRET)
-        ).encode()
-
-    @staticmethod
-    def _decrypt_chunk(key, data):
-        """Decrypt a chunk of a Deezer stream.
-
-        :param key:
-        :param data:
-        """
-        return Blowfish.new(
-            key,
-            Blowfish.MODE_CBC,
-            b"\x00\x01\x02\x03\x04\x05\x06\x07",
-        ).decrypt(data)
 
 
 class DownloadPool:

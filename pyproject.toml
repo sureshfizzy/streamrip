@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "streamrip"
 version = "1.9.7"
-description = "A fast, all-in-one music ripper for Qobuz, Deezer, Tidal, and SoundCloud"
+description = "A fast, all-in-one music ripper for Qobuz, Tidal, and SoundCloud"
 authors = ["nathom <nathanthomas707@gmail.com>"]
 license = "GPL-3.0-only"
 readme = "README.md"
@@ -33,7 +33,6 @@ simple-term-menu = {version = "^1.2.1", platform = 'darwin|linux'}
 pick = {version = "^1.0.0", platform = 'win32|cygwin'}
 windows-curses = {version = "^2.2.0", platform = 'win32|cygwin'}
 Pillow = "^9.0.0"
-deezer-py = "1.3.6"
 pycryptodomex = "^3.10.1"
 cleo = {version = "1.0.0a4", allow-prereleases = true}
 appdirs = "^1.4.4"

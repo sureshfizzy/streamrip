@@ -120,21 +120,11 @@ __QUALITY_MAP: Dict[str, Dict[int, Union[int, str, Tuple[int, str]]]] = {
         3: 7,
         4: 27,
     },
-    "deezer": {
-        0: (9, "MP3_128"),
-        1: (3, "MP3_320"),
-        2: (1, "FLAC"),
-    },
     "tidal": {
         0: "LOW",  # AAC
         1: "HIGH",  # AAC
         2: "LOSSLESS",  # CD Quality
         3: "HI_RES",  # MQA
-    },
-    "deezloader": {
-        0: 128,
-        1: 320,
-        2: 1411,
     },
 }
 
@@ -144,7 +134,7 @@ def get_quality(quality_id: int, source: str) -> Union[str, int, Tuple[int, str]
 
     :param quality_id: the universal quality id (0, 1, 2, 4)
     :type quality_id: int
-    :param source: qobuz, tidal, or deezer
+    :param source: qobuz, or tidal
     :type source: str
     :rtype: Union[str, int]
     """
@@ -384,28 +374,6 @@ def get_cover_urls(resp: dict, source: str) -> Optional[dict]:
             sk: tidal_cover_url(uuid, size)
             for sk, size in zip(COVER_SIZES, (160, 320, 640, 1280))
         }
-
-    if source == "deezer":
-        resp_keys = ("cover", "cover_medium", "cover_large", "cover_xl")
-        resp_keys_fallback = (
-            "picture",
-            "picture_medium",
-            "picture_large",
-            "picture_xl",
-        )
-        cover_urls = {
-            sk: resp.get(rk, resp.get(rkf))  # size key, resp key, resp key fallback
-            for sk, rk, rkf in zip(
-                COVER_SIZES,
-                resp_keys,
-                resp_keys_fallback,
-            )
-        }
-
-        if cover_urls["large"] is None and resp.get("cover_big") is not None:
-            cover_urls["large"] = resp["cover_big"]
-
-        return cover_urls
 
     if source == "soundcloud":
         cover_url = (resp["artwork_url"] or resp["user"].get("avatar_url")).replace(

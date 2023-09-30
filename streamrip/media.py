@@ -28,7 +28,7 @@ from mutagen.mp4 import MP4, MP4Cover
 from pathvalidate import sanitize_filepath
 
 from . import converter
-from .clients import Client, DeezloaderClient
+from .clients import Client
 from .constants import ALBUM_KEYS, FLAC_MAX_BLOCKSIZE, FOLDER_FORMAT, TRACK_FORMAT
 from .downloadtools import DownloadPool, DownloadStream
 from .exceptions import (
@@ -325,38 +325,6 @@ class Track(Media):
 
             _quick_download(download_url, self.path, desc=self._progress_desc)
 
-        elif isinstance(self.client, DeezloaderClient):
-            _quick_download(dl_info["url"], self.path, desc=self._progress_desc)
-
-        elif self.client.source == "deezer":
-            # We can only find out if the requested quality is available
-            # after the streaming request is sent for deezer
-
-            try:
-                stream = DownloadStream(
-                    dl_info["url"], source="deezer", item_id=self.id
-                )
-            except NonStreamable:
-                self.id = dl_info["fallback_id"]
-                dl_info = self.client.get_file_url(self.id, self.quality)
-                assert isinstance(dl_info, dict)
-                stream = DownloadStream(
-                    dl_info["url"], source="deezer", item_id=self.id
-                )
-
-            stream_size = len(stream)
-            stream_quality = dl_info["size_to_quality"][stream_size]
-            if self.quality != stream_quality:
-                # The chosen quality is not available
-                self.quality = stream_quality
-                self.format_final_path(
-                    restrict=kwargs.get("restrict_filenames", False)
-                )  # If the extension is different
-
-            with open(self.path, "wb") as file:
-                for chunk in tqdm_stream(stream, desc=self._progress_desc):
-                    file.write(chunk)
-
         elif self.client.source == "soundcloud":
             self._soundcloud_download(dl_info)
 
@@ -543,8 +511,6 @@ class Track(Media):
                 cover_url = item["album"]["image"]["large"]
             elif client.source == "tidal":
                 cover_url = tidal_cover_url(item["album"]["cover"], 640)
-            elif client.source == "deezer":
-                cover_url = item["album"]["cover_big"]
             elif client.source == "soundcloud":
                 if (small_url := item["artwork_url"]) is not None:
                     cover_url = small_url.replace("large", "t500x500")
@@ -1286,7 +1252,7 @@ class Tracklist(list):
 
         :param resp: response dict
         :type resp: dict
-        :param source: in ('qobuz', 'deezer', 'tidal')
+        :param source: in ('qobuz', 'tidal')
         :type source: str
         """
         info = cls._parse_get_resp(item, client=client)
@@ -1576,7 +1542,7 @@ class Album(Tracklist, Media):
         item.download(quality=min(self.quality, quality), **kwargs)
 
         logger.debug("tagging tracks")
-        # deezer tracks come tagged
+
         if kwargs.get("tag_tracks", True):
             item.tag(
                 cover=self.cover_obj,
@@ -1810,13 +1776,6 @@ class Playlist(Tracklist, Media):
                     "source": self.client.source,
                 }
 
-        elif self.client.source == "deezer":
-            self.name = self.meta["title"]
-            self.image = self.meta["picture_big"]
-            self.creator = safe_get(self.meta, "creator", "name", default="Deezer")
-
-            tracklist = self.meta["tracks"]
-
         elif self.client.source == "soundcloud":
             self.name = self.meta["title"]
             # self.image = self.meta.get("artwork_url").replace("large", "t500x500")
@@ -1908,11 +1867,6 @@ class Playlist(Tracklist, Media):
             return {
                 "name": item["title"],
                 "id": item["uuid"],
-            }
-        elif client.source == "deezer":
-            return {
-                "name": item["title"],
-                "id": item["id"],
             }
         elif client.source == "soundcloud":
             return {
@@ -2017,10 +1971,6 @@ class Artist(Tracklist, Media):
             self.name = self.meta["name"]
             albums = self.meta["albums"]
 
-        elif self.client.source == "deezer":
-            self.name = self.meta["name"]
-            albums = self.meta["albums"]
-
         else:
             raise InvalidSourceError(self.client.source)
 
@@ -2110,11 +2060,11 @@ class Artist(Tracklist, Media):
 
     @classmethod
     def from_api(cls, item: dict, client: Client, source: str = "qobuz"):
-        """Create an Artist object from the api response of Qobuz, Tidal, or Deezer.
+        """Create an Artist object from the api response of Qobuz, or Tidal.
 
         :param resp: response dict
         :type resp: dict
-        :param source: in ('qobuz', 'deezer', 'tidal')
+        :param source: in ('qobuz', 'tidal')
         :type source: str
         """
         logging.debug("Loading item from API")
@@ -2132,7 +2082,7 @@ class Artist(Tracklist, Media):
         :param client:
         :type client: Client
         """
-        if client.source in ("qobuz", "deezer"):
+        if client.source in ("qobuz"):
             info = {
                 "name": item.get("name"),
                 "id": item.get("id"),
@@ -2323,7 +2273,7 @@ def _get_tracklist(resp: dict, source: str) -> list:
     """
     if source == "qobuz":
         return resp["tracks"]["items"]
-    if source in ("tidal", "deezer"):
+    if source in ("tidal"):
         return resp["tracks"]
 
     raise NotImplementedError(source)

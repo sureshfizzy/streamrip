@@ -159,17 +159,7 @@ TIDAL_Q_MAP = {
     "HI_RES": 3,
 }
 
-DEEZER_MAX_Q = 6
-DEEZER_FEATURED_KEYS = {"releases", "charts", "selection"}
 AVAILABLE_QUALITY_IDS = (0, 1, 2, 3, 4)
-DEEZER_FORMATS = {
-    "AAC_64",
-    "MP3_64",
-    "MP3_128",
-    "MP3_256",
-    "MP3_320",
-    "FLAC",
-}
 # video only for tidal
 MEDIA_TYPES = {"track", "album", "artist", "label", "playlist", "video"}
 
@@ -187,9 +177,6 @@ QOBUZ_BASE = "https://www.qobuz.com/api.json/0.2"
 
 TIDAL_BASE = "https://api.tidalhifi.com/v1"
 TIDAL_AUTH_URL = "https://auth.tidal.com/v1/oauth2"
-
-DEEZER_BASE = "https://api.deezer.com"
-DEEZER_DL = "http://dz.loaderapp.info/deezer"
 
 SOUNDCLOUD_BASE = "https://api-v2.soundcloud.com"
 
