@@ -667,12 +667,19 @@ class RipCore(list):
                     if i >= limit - 1:
                         return
         else:
-            items = (
+            results = (
                 results.get("data")
                 or results.get("items")
                 or results.get("collection")
                 or results.get("albums", {}).get("data", False)
             )
+
+            # Remove duplicate censored albums, explicit are preferred
+            for key in items:
+                for key2 in items:
+                    if key['releaseDate'] == key2['releaseDate'] and key['title'] == key2['title']:
+                        if key['popularity'] > key2['popularity']:
+                            items.remove(key2)
 
             if not items:
                 raise NoResultsFound(query)
@@ -696,7 +703,9 @@ class RipCore(list):
                 "Released on {year}\n{tracktotal} tracks\n"
                 "{bit_depth} bit / {sampling_rate} Hz\n"
                 "Version: {version}\n"
-                "Genre: {genre}"
+                "Genre: {genre}\n"
+                "Explicit: {explicit}\n"
+                "Popularity: {popularity}"
             )
         elif isinstance(media, Artist):
             fmt = "{name}"
@@ -719,7 +728,7 @@ class RipCore(list):
     def interactive_search(
         self,
         query: str,
-        source: str = "qobuz",
+        source: str = "tidal",
         media_type: str = "album",
         limit: int = 50,
     ):
@@ -734,17 +743,28 @@ class RipCore(list):
         """
         results = tuple(self.search(source, query, media_type, limit=limit))
 
+        if media_type == "album":
+            # Sort albums by date released
+            results = sorted(results, key=lambda d: d['date'])
+
+            # Remove duplicate censored albums, explicit are preferred
+            for key in results:
+                for key2 in results:
+                    if key2['explicit'] == False and key['date'] == key2['date'] and key['title'] == key2['title']:
+                        results.remove(key2)
+
         def title(res):
             index, item = res
             item_no = index + 1
             if isinstance(item, Album):
-                return f"{item_no}. {item.album}"
+                explicit = "[EXPLICIT]" if item.explicit else ""
+                return f"{str(item_no).zfill(2)}. [{item.year}][{item.bit_depth} bit/{item.sampling_rate} Hz]{explicit} {item.album}"
             elif isinstance(item, Track):
-                return f"{item_no}. {item.meta.title}"
+                return f"{str(item_no).zfill(2)}. {item.meta.title}"
             elif isinstance(item, Playlist):
-                return f"{item_no}. {item.name}"
+                return f"{str(item_no).zfill(2)}. {item.name}"
             elif isinstance(item, Artist):
-                return f"{item_no}. {item.name}"
+                return f"{str(item_no).zfill(2)}. {item.name}"
             else:
                 raise NotImplementedError(item.type)
 

@@ -2009,6 +2009,15 @@ class Artist(Tracklist, Media):
             self.name = self.meta["name"]
             albums = self.meta["albums"]["items"]
 
+            # Sort albums by date released
+            albums = sorted(albums, key=lambda d: d['released_at'])
+
+            # Remove duplicate censored albums, explicit are preferred
+            for key in albums:
+                for key2 in albums:
+                    if key2['parental_warning'] == False and key['tracks_count'] == key2['tracks_count'] and key['title'] == key2['title']:
+                        albums.remove(key2)
+
         elif self.client.source == "tidal":
             self.name = self.meta["name"]
             albums = self.meta["albums"]
@@ -2039,11 +2048,7 @@ class Artist(Tracklist, Media):
         :param kwargs:
         :rtype: Iterable
         """
-        if kwargs.get("folder_format"):
-            folder = clean_filename(self.name, kwargs.get("restrict_filenames", False))
-            self.folder = os.path.join(parent_folder, folder)
-        else:
-            self.folder = parent_folder
+        self.folder = parent_folder
 
         logger.debug("Artist folder: %s", self.folder)
         logger.debug("Length of tracklist %d", len(self))

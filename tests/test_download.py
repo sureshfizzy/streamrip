@@ -1,7 +1,5 @@
 import os
 import time
-from pprint import pprint
-
 from streamrip.downloadtools import DownloadPool
 
 
