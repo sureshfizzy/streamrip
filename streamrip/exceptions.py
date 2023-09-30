@@ -86,11 +86,6 @@ class ParsingError(Exception):
 class TooLargeCoverArt(Exception):
     """TooLargeCoverArt."""
 
-
-class BadEncoderOption(Exception):
-    """BadEncoderOption."""
-
-
 class ConversionError(Exception):
     """ConversionError."""
 
