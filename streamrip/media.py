@@ -1442,6 +1442,7 @@ class Album(Tracklist, Media):
         self.disctotal: int
         self.tracktotal: int
         self.albumartist: str
+        self.explicit: bool
 
         # usually an unpacked TrackMetadata.asdict()
         self.__dict__.update(kwargs)
@@ -1550,7 +1551,7 @@ class Album(Tracklist, Media):
             for item in self.booklets:
                 Booklet(item).download(parent_folder=self.folder)
 
-    def _download_item(self, item: Media, **kwargs: Any):
+    def _download_item(self, item: Track, **kwargs: Any):
         """Download an item.
 
         :param track: The item.
@@ -2012,16 +2013,6 @@ class Artist(Tracklist, Media):
             # Sort albums by date released
             albums = sorted(albums, key=lambda d: d['released_at'])
 
-            for key in albums:
-                # Remove albums with less then 3 songs, usually this means it's a single or remixes
-                if int(key['tracks_count']) < 3:
-                    albums.remove(key)
-                else:
-                    # Remove duplicate censored albums, explicit are preferred
-                    for key2 in albums:
-                        if key2['parental_warning'] is False and key['tracks_count'] == key2['tracks_count'] and key['title'] == key2['title']:
-                            albums.remove(key2)
-
         elif self.client.source == "tidal":
             self.name = self.meta["name"]
             albums = self.meta["albums"]
@@ -2036,6 +2027,16 @@ class Artist(Tracklist, Media):
         for album in albums:
             logger.debug("Appending album: %s", album.get("title"))
             self.append(Album.from_api(album, self.client))
+
+    def _albums(self, filters):
+        final: Iterable
+        if "repeats" in filters:
+            final = self._remove_repeats(bit_depth=max, sampling_rate=min)
+            filters = tuple(f for f in filters if f != "repeats")
+        else:
+            final = self
+
+        return final
 
     def _prepare_download(
         self,
@@ -2058,12 +2059,7 @@ class Artist(Tracklist, Media):
         logger.debug("Length of tracklist %d", len(self))
         logger.debug("Filters: %s", filters)
 
-        final: Iterable
-        if "repeats" in filters:
-            final = self._remove_repeats(bit_depth=max, sampling_rate=min)
-            filters = tuple(f for f in filters if f != "repeats")
-        else:
-            final = self
+        final = self._albums(filters)
 
         if isinstance(filters, tuple) and self.client.source == "qobuz":
             filter_funcs = (getattr(self, f"_{filter_}") for filter_ in filters)
@@ -2238,6 +2234,31 @@ class Artist(Tracklist, Media):
         :rtype: bool
         """
         return len(album) > 1
+
+    def _album_less_than_3_tracks(self, album: Album) -> bool:
+        """Filter albums that are not greater than 3 tracks.
+
+        :param artist: usually self
+        :param album: the album to check
+        :type album: Album
+        :rtype: bool
+        """
+        return album.tracktotal > 3
+
+    def _ignore_censored_album_when_explicit_exists(self, album: Album) -> bool:
+        """Filter censored albums when an explicit version exists.
+
+        :param artist: usually self
+        :param album: the album to check
+        :type album: Album
+        :rtype: bool
+        """
+        iterator = self._albums(())
+        for item in iterator:
+            if album.explicit is False and item.explicit is True and album.tracktotal == item.tracktotal and album.title == item.title:
+                return False
+
+        return True
 
     # --------- Magic Methods --------
 
