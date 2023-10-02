@@ -101,10 +101,6 @@ features = false
 non_studio_albums = false
 # Only download remastered albums
 non_remaster = false
-# Albums that are greater than 3 tracks
-album_less_than_3_tracks = false
-# Remove censored albums when an explicit version exists
-ignore_censored_album_when_explicit_exists = false
 
 [artwork]
 # Write the image to the audio file
