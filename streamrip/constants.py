@@ -141,7 +141,6 @@ ALBUM_KEYS = (
     "container",
     "albumcomposer",
     "id",
-    "explicit",
 )
 # TODO: rename these to DEFAULT_FOLDER_FORMAT etc
 FOLDER_FORMAT = (

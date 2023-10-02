@@ -205,7 +205,7 @@ def clean_format(formatter: str, format_info, restrict: bool = False):
             clean_dict[key] = clean_filename(str(format_info[key]), restrict=restrict)
         elif key == "explicit":
             logger.debug("3")
-            clean_dict[key] = " [Explicit]" if format_info.get(key, False) else ""
+            clean_dict[key] = " (Explicit) " if format_info.get(key, False) else ""
         elif isinstance(format_info.get(key), int):  # track/discnumber
             logger.debug("2")
             clean_dict[key] = f"{format_info[key]:02}"

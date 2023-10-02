@@ -1963,19 +1963,6 @@ class Artist(Tracklist, Media):
             self.name = self.meta["name"]
             albums = self.meta["albums"]["items"]
 
-            # Sort albums by date released
-            albums = sorted(albums, key=lambda d: d['released_at'])
-
-            for key in albums:
-                # Remove albums with less then 3 songs, usually this means it's a single or remixes
-                if int(key['tracks_count']) < 3:
-                    albums.remove(key)
-                else:
-                    # Remove duplicate censored albums, explicit are preferred
-                    for key2 in albums:
-                        if key2['parental_warning'] is False and key['tracks_count'] == key2['tracks_count'] and key['title'] == key2['title']:
-                            albums.remove(key2)
-
         elif self.client.source == "tidal":
             self.name = self.meta["name"]
             albums = self.meta["albums"]
@@ -2002,7 +1989,6 @@ class Artist(Tracklist, Media):
         :param kwargs:
         :rtype: Iterable
         """
-
         if kwargs.get("folder_format"):
             folder = clean_filename(self.name, kwargs.get("restrict_filenames", False))
             self.folder = os.path.join(parent_folder, folder)

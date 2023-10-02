@@ -657,9 +657,7 @@ class RipCore(list):
                 "Released on {year}\n{tracktotal} tracks\n"
                 "{bit_depth} bit / {sampling_rate} Hz\n"
                 "Version: {version}\n"
-                "Genre: {genre}\n"
-                "Explicit: {explicit}\n"
-                "Popularity: {popularity}"
+                "Genre: {genre}"
             )
         elif isinstance(media, Artist):
             fmt = "{name}"
@@ -682,7 +680,7 @@ class RipCore(list):
     def interactive_search(  # noqa: C901
         self,
         query: str,
-        source: str = "tidal",
+        source: str = "qobuz",
         media_type: str = "album",
         limit: int = 50,
     ):
@@ -697,28 +695,17 @@ class RipCore(list):
         """
         results = tuple(self.search(source, query, media_type, limit=limit))
 
-        if media_type == "album":
-            # Sort albums by date released
-            results = sorted(results, key=lambda d: d['date'])
-
-            # Remove duplicate censored albums, explicit are preferred
-            for key in results:
-                for key2 in results:
-                    if key2['explicit'] is False and key['date'] == key2['date'] and key['title'] == key2['title']:
-                        results.remove(key2)
-
         def title(res):
             index, item = res
             item_no = index + 1
             if isinstance(item, Album):
-                explicit = "[EXPLICIT]" if item.explicit else ""
-                return f"{str(item_no).zfill(2)}. [{item.year}][{item.bit_depth} bit/{item.sampling_rate} Hz]{explicit} {item.album}"
+                return f"{item_no}. {item.album}"
             elif isinstance(item, Track):
-                return f"{str(item_no).zfill(2)}. {item.meta.title}"
+                return f"{item_no}. {item.meta.title}"
             elif isinstance(item, Playlist):
-                return f"{str(item_no).zfill(2)}. {item.name}"
+                return f"{item_no}. {item.name}"
             elif isinstance(item, Artist):
-                return f"{str(item_no).zfill(2)}. {item.name}"
+                return f"{item_no}. {item.name}"
             else:
                 raise NotImplementedError(item.type)
 
