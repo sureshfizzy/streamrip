@@ -2124,10 +2124,16 @@ class Artist(Tracklist, Media):
             assert bit_depth in (min, max) and sampling_rate in (min, max)
             best_bd = bit_depth(a["bit_depth"] for a in group)
             best_sr = sampling_rate(a["sampling_rate"] for a in group)
+            # Track if there's an album with the best bit depth and sampling rate
+            has_best_album = False
             for album in group:
                 if album["bit_depth"] == best_bd and album["sampling_rate"] == best_sr:
                     yield album
+                    has_best_album = True
                     break
+            # If there's no album with the best bit depth and sampling rate, yield the first album
+            if not has_best_album and group:
+                yield group[0]
 
     def _non_studio_albums(self, album: Album) -> bool:
         """Filter non-studio-albums.
