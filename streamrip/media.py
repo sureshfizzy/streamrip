@@ -2002,7 +2002,12 @@ class Artist(Tracklist, Media):
         :param kwargs:
         :rtype: Iterable
         """
-        self.folder = parent_folder
+
+        if kwargs.get("folder_format"):
+            folder = clean_filename(self.name, kwargs.get("restrict_filenames", False))
+            self.folder = os.path.join(parent_folder, folder)
+        else:
+            self.folder = parent_folder
 
         logger.debug("Artist folder: %s", self.folder)
         logger.debug("Length of tracklist %d", len(self))
